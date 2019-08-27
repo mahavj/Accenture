@@ -1,0 +1,124 @@
+1.
+mysql> select d.dept_id,d.dept_name,coalesce(sum(emp_sal),0) as sum_emp_sal from employee e right join dept d on e.dept_id=d.dept_id group by e.dept_id;
++---------+-----------+-------------+
+| dept_id | dept_name | sum_emp_sal |
++---------+-----------+-------------+
+|       1 | IT        |        9000 |
+|       2 | ADMIN     |       11000 |
+|       4 | HR        |           0 |
++---------+-----------+-------------+
+3 rows in set (0.00 sec)
+
+2.
+mysql> select e.dept_id,coalesce(d.dept_name,'others') as dept_name,sum(emp_sal) as sum_emp_sal from employee e left join dept d on e.dept_id=d.dept_id group by e.dept_id;
++---------+-----------+-------------+
+| dept_id | dept_name | sum_emp_sal |
++---------+-----------+-------------+
+|       1 | IT        |        9000 |
+|       2 | ADMIN     |       11000 |
+|       3 | others    |        7000 |
++---------+-----------+-------------+
+3 rows in set (0.00 sec)
+
+
+3.
+mysql> select emp_id,emp_name,manager_id from employee1 where  salary>2700 and salary<10000;
++--------+----------+------------+
+| emp_id | emp_name | manager_id |
++--------+----------+------------+
+|      3 | vinoth   |          1 |
+|      4 | abhishek |          2 |
+|      5 | divya    |          3 |
++--------+----------+------------+
+3 rows in set (0.00 sec)
+
+
+5.
+mysql> select emp_id,substr(emp_name,4)as derv_emp_name from employee2;
++--------+-----------------+
+| emp_id | derv_emp_name   |
++--------+-----------------+
+|      1 | eshKumar        |
+|      2 | ayaRaja         |
+|      3 | ishek           |
+|      4 | eshKumar        |
+|      5 | ayaprakashSingh |
+|      6 | yashree         |
++--------+-----------------+
+6 rows in set (0.00 sec)
+
+6.mysql> select emp_id,substr(emp_name,locate('h',emp_name)+1) as derv_emp_name from employee2;
++--------+---------------+
+| emp_id | derv_emp_name |
++--------+---------------+
+|      1 | Kumar         |
+|      2 | ayaRaja       |
+|      3 | ishek         |
+|      4 | Kumar         |
+|      5 | Singh         |
+|      6 | ree           |
++--------+---------------+
+6 rows in set (0.00 sec)
+
+7.mysql> select emp_id,emp_name,salary from (select emp_id,emp_name,salary,dense_rank() over(order by salary desc) as r from employee1 ) as atb1 where r=2;
++--------+----------+--------+
+| emp_id | emp_name | salary |
++--------+----------+--------+
+|      5 | divya    |   6000 |
++--------+----------+--------+
+1 row in set (0.00 sec)
+
+
+8.mysql> select emp_id,emp_name,salary from (select emp_id,emp_name,salary,dense_rank() over(order by salary desc) as r from employee1 ) as atb1 where r<=3;
++--------+----------+--------+
+| emp_id | emp_name | salary |
++--------+----------+--------+
+|      1 | vivek    |  11000 |
+|      5 | divya    |   6000 |
+|      4 | abhishek |   5000 |
++--------+----------+--------+
+3 rows in set (0.00 sec)
+
+9.mysql> select emp_id,emp_name,dept_name from employee3 where salary>3000 and dept_name='IT'
+    -> UNION
+    -> select emp_id,emp_name,dept_name from employee3 where salary>3400 and dept_name='Admin';
++--------+----------+-----------+
+| emp_id | emp_name | dept_name |
++--------+----------+-----------+
+|      4 | Abhishek | IT        |
+|      2 | Raj      | Admin     |
++--------+----------+-----------+
+2 rows in set (0.00 sec)
+
+10.mysql> select * from employee4  where emp_name like '%j%';
++--------+-----------+-----------+--------+
+| Emp_id | Emp_Name  | Dept_Name | Salary |
++--------+-----------+-----------+--------+
+|      1 | Rajesh    | IT        |   2000 |
+|      2 | Ajaykumar | Admin     |   3500 |
+|      5 | Balaji    | ITES      |   3000 |
++--------+-----------+-----------+--------+
+3 rows in set (0.00 sec)
+
+11.
+mysql> select * from employee4  where emp_name like '%j%' or emp_name like '%n%' or emp_name like '%m%';
++--------+------------+-----------+--------+
+| Emp_id | Emp_Name   | Dept_Name | Salary |
++--------+------------+-----------+--------+
+|      1 | Rajesh     | IT        |   2000 |
+|      2 | Ajaykumar  | Admin     |   3500 |
+|      4 | Vivekkumar | IT        |   5700 |
+|      5 | Balaji     | ITES      |   3000 |
+|      6 | Raveendar  | HR        |   5800 |
+|      7 | Poornarao  | Admin     |   3200 |
++--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+12.
+mysql> select * from employee4  where emp_name like '%h%' and emp_name like '%b%' and emp_name like '%e%';
++--------+----------+-----------+--------+
+| Emp_id | Emp_Name | Dept_Name | Salary |
++--------+----------+-----------+--------+
+|      3 | Abhishek | HR        |   4800 |
++--------+----------+-----------+--------+
+1 row in set (0.00 sec)
