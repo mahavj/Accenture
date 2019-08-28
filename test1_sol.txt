@@ -32,6 +32,18 @@ mysql> select emp_id,emp_name,manager_id from employee1 where  salary>2700 and s
 +--------+----------+------------+
 3 rows in set (0.00 sec)
 
+4.
+mysql> select e.emp_id as manager_id,e.emp_name as manager_name,sum(m.salary) as salary from  employee1 e JOIN employee1 m on e.emp_id=m.manager_id group by m.manager_id order by e.emp_id;
++------------+--------------+--------+
+| manager_id | manager_name | salary |
++------------+--------------+--------+
+|          1 | Vivek        |   5000 |
+|          2 | Raj          |   5000 |
+|          3 | Vinoth       |  10850 |
+|          4 | Abhishek     |   2700 |
+|          8 | Aarthi       |  11000 |
++------------+--------------+--------+
+5 rows in set (0.00 sec)
 
 5.
 mysql> select emp_id,substr(emp_name,4)as derv_emp_name from employee2;
