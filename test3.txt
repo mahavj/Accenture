@@ -1,0 +1,140 @@
+1.mysql> select e.emp_id,e.emp_name,
+    ->      case
+    ->      when d.desc_name is null then "others"
+    ->     else desc_name
+    ->      end as desc_name,
+    ->      case when p.place_desc is null then "others"
+    ->     else place_desc end as place_desc,
+    ->      case when pr.proj_name is null then "others"
+    ->     else pr.proj_name
+    ->      end as proj_name,count(*) over(partition by desc_name)as emp_desc_count ,count(*) over(partition by p.place_id)as emp_proj_count from employee e left join designation d
+    ->     ON d.desc_id=e.desc_id left JOIN place p
+    ->      ON e.place_id=p.place_id left JOIN project1 pr
+    ->      ON e.proj_id=pr.proj_id order by emp_id ;
++--------+---------------+-----------+------------+------------------------+----------------+----------------+
+| emp_id | emp_name      | desc_name | place_desc | proj_name              | emp_desc_count | emp_proj_count |
++--------+---------------+-----------+------------+------------------------+----------------+----------------+
+|      1 | Vijaykumar    | ASE       | Chennai    | Pepsi Data Mart        |              3 |              2 |
+|      2 | Raja          | SE        | Hyderabad  | Microsoft              |              3 |              3 |
+|      3 | Abhisheksingh | ASE       | Mexico     | Amazon Cloud Logistics |              3 |              1 |
+|      4 | Santosh       | SSE       | Bangalore  | Neon Data & Analytics  |              2 |              2 |
+|      5 | Kribakaran    | SE        | Hyderabad  | ASG Data Warehousing   |              3 |              3 |
+|      6 | Divya         | TL        | Newyork    | Pepsi Data Mart        |              1 |              2 |
+|      7 | Suganya       | ASE       | Hyderabad  | Microsoft              |              3 |              3 |
+|      8 | Shalini       | SE        | Bangalore  | ASG Data Warehousing   |              3 |              2 |
+|      9 | Avantika      | SSE       | Chennai    | Amazon Cloud Logistics |              2 |              2 |
+|     10 | Ajay          | AM        | others     | others                 |              1 |              5 |
+|     11 | Tamilselvan   | others    | others     | others                 |              5 |              5 |
+|     12 | Vinodha       | others    | others     | others                 |              5 |              5 |
+|     13 | Karthick      | others    | Newyork    | ASG Data Warehousing   |              5 |              2 |
+|     14 | Sanjay        | others    | others     | Amazon Cloud Logistics |              5 |              5 |
+|     15 | Meera         | others    | others     | others                 |              5 |              5 |
++--------+---------------+-----------+------------+------------------------+----------------+----------------+
+15 rows in set (0.00 sec)
+
+
+2.
+mysql> select e.emp_id,e.emp_name,
+    ->      case
+    ->      when d.desc_name is null then "others"
+    ->     else desc_name
+    ->      end as desc_name,
+    ->      case when p.place_desc is null then "others"
+    ->     else place_desc end as place_desc,
+    ->      case when pr.proj_name is null then "others"
+    ->     else pr.proj_name
+    ->      end as proj_name from employee e left join designation d
+    ->     ON d.desc_id=e.desc_id left JOIN place p
+    ->      ON e.place_id=p.place_id left JOIN project1 pr
+    ->      ON e.proj_id=pr.proj_id  where pr.proj_name like '%cloud%' or pr.proj_name like '%data%' order by emp_id;
++--------+---------------+-----------+------------+------------------------+
+| emp_id | emp_name      | desc_name | place_desc | proj_name              |
++--------+---------------+-----------+------------+------------------------+
+|      1 | Vijaykumar    | ASE       | Chennai    | Pepsi Data Mart        |
+|      3 | Abhisheksingh | ASE       | Mexico     | Amazon Cloud Logistics |
+|      4 | Santosh       | SSE       | Bangalore  | Neon Data & Analytics  |
+|      5 | Kribakaran    | SE        | Hyderabad  | ASG Data Warehousing   |
+|      6 | Divya         | TL        | Newyork    | Pepsi Data Mart        |
+|      8 | Shalini       | SE        | Bangalore  | ASG Data Warehousing   |
+|      9 | Avantika      | SSE       | Chennai    | Amazon Cloud Logistics |
+|     13 | Karthick      | others    | Newyork    | ASG Data Warehousing   |
+|     14 | Sanjay        | others    | others     | Amazon Cloud Logistics |
++--------+---------------+-----------+------------+------------------------+
+9 rows in set (0.00 sec)
+
+3.mysql> select emp_id,emp_name,desc_id,
+    ->      desc_name,
+    ->       place_desc,
+    ->       proj_name from  (select e.emp_id,e.emp_name,d.desc_id,
+    ->      desc_name,
+    ->       place_desc,
+    ->       proj_name,dense_rank() over(partition by e.place_id order by e.desc_id desc,e.proj_id)as did from employee e join designation d
+    ->     ON d.desc_id=e.desc_id  JOIN place p
+    ->      ON e.place_id=p.place_id  JOIN project1 pr
+    ->      ON e.proj_id=pr.proj_id) as a where did=1 order by emp_id ;
++--------+---------------+---------+-----------+------------+------------------------+
+| emp_id | emp_name      | desc_id | desc_name | place_desc | proj_name              |
++--------+---------------+---------+-----------+------------+------------------------+
+|      3 | Abhisheksingh |      10 | ASE       | Mexico     | Amazon Cloud Logistics |
+|      4 | Santosh       |      30 | SSE       | Bangalore  | Neon Data & Analytics  |
+|      5 | Kribakaran    |      20 | SE        | Hyderabad  | ASG Data Warehousing   |
+|      6 | Divya         |      40 | TL        | Newyork    | Pepsi Data Mart        |
+|      9 | Avantika      |      30 | SSE       | Chennai    | Amazon Cloud Logistics |
++--------+---------------+---------+-----------+------------+------------------------+
+5 rows in set (0.00 sec)
+
+
+4.
+mysql> select manager,cust_name from(select m.salesman_name manager,c.cust_name ,c.purchased_amount ,dense_rank() over (partition by m.salesman_name order by purchased_amount desc) as ran from sales s
+    -> join sales m on s.sales_manager_id=m.salesman_id join cust c on s.salesman_id=c.salesman_id) a where ran=1;
++---------+-----------+
+| manager | cust_name |
++---------+-----------+
+| Abraham | James     |
+| Balaji  | Arun      |
+| Srinath | Jyothi    |
+| Vijay   | Dinesh    |
++---------+-----------+
+4 rows in set (0.00 sec)
+
+
+5.
+
+
+mysql> update sales s inner join (select  salesman_id,sum(purchased_amount) as summ from cust group by salesman_id) a on s.salesman_id=a.salesman_id and monthly_target<a.summ set monthly_target=a.summ;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from sales;
++-------------+---------------+-----------+------------------+----------------+
+| Salesman_Id | Salesman_Name | City      | Sales_Manager_id | Monthly_Target |
++-------------+---------------+-----------+------------------+----------------+
+|           1 | John          | Chennai   |                2 |          10000 |
+|           2 | Abraham       | Bangalore |                4 |           8000 |
+|           3 | Raju          | Hyderabad |                4 |          23000 |
+|           4 | Srinath       | Mumbai    |                5 |           9000 |
+|           5 | Vijay         | Chennai   |                6 |           5000 |
+|           6 | Balaji        | Hyderabad |                6 |          10000 |
++-------------+---------------+-----------+------------------+----------------+
+6 rows in set (0.00 sec)
+
+with condition::
+
+mysql>  update sales s inner join (select  salesman_id,sum(purchased_amount) as summ from cust group by salesman_id) a on s.salesman_id=a.salesman_id and monthly_target<a.summ set monthly_target=a.summ;
+Query OK, 2 rows affected (0.22 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from sales;
++-------------+---------------+-----------+------------------+----------------+
+| Salesman_Id | Salesman_Name | City      | Sales_Manager_id | Monthly_Target |
++-------------+---------------+-----------+------------------+----------------+
+|           1 | John          | Chennai   |                2 |          10000 |
+|           2 | Abraham       | Bangalore |                4 |          21000 |
+|           3 | Raju          | Hyderabad |                4 |          23000 |
+|           4 | Srinath       | Mumbai    |                5 |           9000 |
+|           5 | Vijay         | Chennai   |                6 |           5000 |
+|           6 | Balaji        | Hyderabad |                6 |          15000 |
++-------------+---------------+-----------+------------------+----------------+
+6 rows in set (0.00 sec)
+
+
