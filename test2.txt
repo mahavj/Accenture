@@ -1,0 +1,423 @@
+create table customer(Customer_id int,Cust_Name varchar(20));
+insert into customer values(10,'JamesMartin');
+insert into customer values(20,'RickyAdams');
+insert into customer values(30,'Ramanujam');
+insert into customer values(40,'JyothiMahalingam');
+insert into customer values(50,'AmaranJothi');
+insert into customer values(60,'AkilanBala');
+insert into customer values(70,'ArunKumar');
+insert into customer values(80,'Dineshkumar');
+
+
+
+create table student(Studen_Id int,Student_name varchar(20),	Student_Detail_id int);
+insert into student values(1,'Ajay',1);
+insert into student values(2,'Ramesh',2);
+insert into student values(3,'Shriram',3);
+insert into student values(4,'Gopi',4);
+insert into student values(5,'Kalai',5);
+insert into student values(6,'Vinoth',6);
+
+
+create table stde(Student_Detail_Id int,City_id int,Class_id int,Start_date date,End_date date);	
+insert into stde values(1,1,2,STR_TO_DATE('07-25-2012','%m-%d-%y'),STR_TO_DATE('07-25-2012','%m-%d-%y')'03-31-2019');	
+insert into stde values(1,1,3,STR_TO_DATE('1/4/2019','%m/%d/%y'),STR_TO_DATE('12-31-9999','%m-%d-%y'));
+	
+insert into stde values(2,2,1,'1-4-2018','03-31-2019');	
+insert into stde values(2,3,2,'1-4-2019','12-31-9999');	
+insert into stde values(3,2,1,'1-4-2017','03-31-2018');	
+insert into stde values(3,3,2,'1-4-2018','03-31-2019');	
+insert into stde values(3,1,3,'1-4-2019','12-31-9999');	
+insert into stde values(4,2,1,'1-4-2018','03-31-2019');	
+insert into stde values(4,3,2,'1-4-2019','12-31-9999');	
+insert into stde values(5,1,2,'1-4-2019','12-31-9999');	
+insert into stde values(6,2,3,'1-4-2019','12-31-9999');	
+
+
+create table cust(Customer_id int,Cust_Name varchar(10),City varchar(10),Priority_num int,Salesman_id int,Purchased_Amount int);
+insert into cust values(10,'James','Chennai',1,1,10000);
+insert into cust values(20,'Ricky','Chennai',1,3,8000);
+insert into cust values(30,'Ramu','Bangalore',1,2,8000);
+insert into cust values(40,'Jyothi','Hyderabad',2,3,9000);
+insert into cust values(50,'Amaran','Chennai',1,4,3000);
+insert into cust values(60,'Akilan','Hyderabad'	,2,3,6000);
+insert into cust values(70,'Arun','Chennai',2,5,5000);
+insert into cust values(80,'Dinesh','Mumbai',2,	4,6000);
+
+
+
+
+
+create table sales(Salesman_Id int,Salesman_Name varchar(10),City varchar(10),Sales_Manager_id int,Monthly_Target int);
+insert into sales values(1,'John','Chennai',2,10000);
+insert into sales values(2,'Abraham','Bangalore',4,21000);
+insert into sales values(3,'Raju','Hyderabad',4,21000);
+insert into sales values(4,'Srinath','Mumbai',5,9000);
+insert into sales values(5,'Vijay','Chennai',6,4000);
+insert into sales values(6,'Balaji','Hyderabad',6,15000);
+
+create table employee(EMP_ID int,EMP_NAME varchar(30),DESC_ID int,PLACE_ID int,PROJ_ID int);
+insert into employee values(1,'Vijaykumar',10,1,3);
+insert into employee values(2,'Raja',20,3,4);
+insert into employee values(3,'Abhisheksingh',10,4,5);
+insert into employee values(4,'Santosh',30,2,1);
+insert into employee values(5,'Kribakaran',20,3,2);
+insert into employee values(6,'Divya',40,5,3);
+insert into employee values(7,'Suganya',10,3,4);
+insert into employee values(8,'Shalini',20,2,2);
+insert into employee values(9,'Avantika',30,1,5);
+insert into employee values(10,'Ajay',50,6,8);
+insert into employee values(11,'Tamilselvan',60,7,6);
+insert into employee values(12,'Vinodha',70,6,7);
+insert into employee values(13,'Karthick',60,5,	2);
+insert into employee values(14,'Sanjay',70,6,5);
+insert into employee values(15,'Meera',60,8,7);
+
+
+
+create table designation(DESC_ID int,DESC_NAME varchar(5),ROLE_TYP varchar(15));
+insert into designation values(10,'ASE','DEVELOPER');
+insert into designation values(20,'SE','DEVELOPER');
+insert into designation values(30,'SSE','DEVELOPER');
+insert into designation values(40,'TL','LEAD');
+insert into designation values(50,'AM','LEAD');
+insert into designation values(100,'SM','MANAGER');
+
+
+create table place(PLACE_ID int,PLACE_DESC varchar(20),PLACE_TYP varchar(20));
+insert into place values(1,'Chennai','Offshore');
+insert into place values(2,'Bangalore','Offshore');
+insert into place values(3,'Hyderabad','Offshore');
+insert into place values(4,'Mexico','Nearshore');
+insert into place values(5,'Newyork','Onshore');
+insert into place values(10,'Canada','Onshore');
+
+
+create table project(PROJ_ID int,PROJ_NAME varchar(20));
+insert into project values(1,'data ware');
+insert into project values(2,'ware data');
+insert into project values(3,'data');
+insert into project values(4,'Microsoft');
+insert into project values(5,'Amazon cloud');
+insert into project values(10,'Flipkart');
+
+
+1.mysql> select e.emp_id,e.emp_name,
+    -> case
+    -> when d.desc_name is null then "Unknown Designation"
+    -> when d.role_typ="Lead" then "Team_Lead" else desc_name
+    ->  end as desc_name,
+    -> case when p.place_desc is null then "others"
+    -> when p.place_typ="Newyork" then "USA"
+    -> else place_desc end as place_desc,
+    -> case when pr.proj_name is null then "Unknown project"
+    -> else pr.proj_name
+    ->  end as proj_name from employee e left join designation d
+    -> ON d.desc_id=e.desc_id left JOIN place p
+    ->  ON e.place_id=p.place_id left JOIN project pr
+    -> ON e.proj_id=pr.proj_id order by emp_id;
++--------+---------------+---------------------+------------+-----------------+
+| emp_id | emp_name      | desc_name           | place_desc | proj_name       |
++--------+---------------+---------------------+------------+-----------------+
+|      1 | Vijaykumar    | ASE                 | Chennai    | Pepsi           |
+|      2 | Raja          | SE                  | Hyderabad  | Microsoft       |
+|      3 | Abhisheksingh | ASE                 | Mexico     | Amazon          |
+|      4 | Santosh       | SSE                 | Bangalore  | Cigna           |
+|      5 | Kribakaran    | SE                  | Hyderabad  | ASG             |
+|      6 | Divya         | Team_Lead           | Newyork    | Pepsi           |
+|      7 | Suganya       | ASE                 | Hyderabad  | Microsoft       |
+|      8 | Shalini       | SE                  | Bangalore  | ASG             |
+|      9 | Avantika      | SSE                 | Chennai    | Amazon          |
+|     10 | Ajay          | Team_Lead           | others     | Unknown project |
+|     11 | Tamilselvan   | Unknown Designation | others     | Unknown project |
+|     12 | Vinodha       | Unknown Designation | others     | Unknown project |
+|     13 | Karthick      | Unknown Designation | Newyork    | ASG             |
+|     14 | Sanjay        | Unknown Designation | others     | Amazon          |
+|     15 | Meera         | Unknown Designation | others     | Unknown project |
++--------+---------------+---------------------+------------+-----------------+
+15 rows in set (0.36 sec)
+
+2.mysql> select e.emp_id,e.emp_name,
+    -> case
+    -> when role_typ='DEVELOPER' and place_typ='Offshore' THEN "TEAMMEMBER"
+    -> when role_typ='DEVELOPER' and place_typ='Nearshore' THEN "TEAMLEAD"
+    -> when role_typ='DEVELOPER' and place_typ='Onshore' THEN "BA"
+    -> when role_typ='LEAD' and place_typ='Onshore' THEN "SCRUMMASTER"
+    -> when role_typ IS NOT  NULL or p.place_id is not null THEN 'contractor'
+    -> else 'shadow' end as proj_role
+    ->  from employee e left join designation d
+    -> ON d.desc_id=e.desc_id left JOIN place p
+    ->  ON e.place_id=p.place_id left JOIN project pr
+    -> ON e.proj_id=pr.proj_id order by emp_id;
++--------+---------------+-------------+
+| emp_id | emp_name      | proj_role   |
++--------+---------------+-------------+
+|      1 | Vijaykumar    | TEAMMEMBER  |
+|      2 | Raja          | TEAMMEMBER  |
+|      3 | Abhisheksingh | TEAMLEAD    |
+|      4 | Santosh       | TEAMMEMBER  |
+|      5 | Kribakaran    | TEAMMEMBER  |
+|      6 | Divya         | SCRUMMASTER |
+|      7 | Suganya       | TEAMMEMBER  |
+|      8 | Shalini       | TEAMMEMBER  |
+|      9 | Avantika      | TEAMMEMBER  |
+|     10 | Ajay          | contractor  |
+|     11 | Tamilselvan   | shadow      |
+|     12 | Vinodha       | shadow      |
+|     13 | Karthick      | contractor  |
+|     14 | Sanjay        | shadow      |
+|     15 | Meera         | shadow      |
++--------+---------------+-------------+
+15 rows in set (0.00 sec)
+
+
+3.mysql> select
+    -> CASE WHEN d.ROLE_TYP='DEVELOPER' THEN D.ROLE_TYP ELSE 'OTHERS' END AS DERV_ROLE_TYP,
+    -> CASE WHEN d.ROLE_TYP ='DEVELOPER'  THEN p.PLACE_DESC ELSE 'OTHERS' END AS DERV_PLACE_DESC ,
+    -> CASE WHEN d.ROLE_TYP='DEVELOPER' THEN pr.PROJ_NAME ELSE 'OTHERS'  END AS DERV_PROJ_DESC,
+    -> count(*) as count from Employee as e
+    -> left  join Designation as d
+    -> on e.DESC_ID=d.DESC_ID
+    -> left  join Place as p
+    -> on e.PLACE_ID=p.PLACE_ID
+    -> left  join Project as pr  on
+    ->  e.PROJ_ID=pr.PROJ_ID
+    ->  group by DERV_ROLE_TYP,DERV_PLACE_DESC,DERV_PROJ_DESC
+    -> order by role_typ desc;
++---------------+-----------------+----------------+-------+
+| DERV_ROLE_TYP | DERV_PLACE_DESC | DERV_PROJ_DESC | count |
++---------------+-----------------+----------------+-------+
+| DEVELOPER     | Bangalore       | Cigna          |     1 |
+| DEVELOPER     | Bangalore       | ASG            |     1 |
+| DEVELOPER     | Hyderabad       | ASG            |     1 |
+| DEVELOPER     | Chennai         | Pepsi          |     1 |
+| DEVELOPER     | Hyderabad       | Microsoft      |     2 |
+| DEVELOPER     | Chennai         | Amazon         |     1 |
+| DEVELOPER     | Mexico          | Amazon         |     1 |
+| OTHERS        | OTHERS          | OTHERS         |     7 |
++---------------+-----------------+----------------+-------+
+8 rows in set (0.00 sec)
+
+4.
+select e.emp_name,
+case 
+when d.desc_name is null then "others"  
+else desc_name end as desc_name,
+case when p.place_desc is null then "others"
+else place_desc end as place_desc,
+case when pr.proj_name is null then "others"
+else pr.proj_name 
+ end as proj_name from employee e left join designation d 
+ON d.desc_id=e.desc_id  left JOIN place p
+ ON e.place_id=p.place_id left JOIN project pr 
+ON e.proj_id=pr.proj_id 
+UNION 
+select e.emp_name,
+case 
+when d.desc_name is null then "others"  
+else desc_name end as desc_name,
+case when p.place_desc is null then "others"
+else place_desc end as place_desc,
+case when pr.proj_name is null then "others"
+else pr.proj_name 
+ end as proj_name from employee e right join designation d 
+ON d.desc_id=e.desc_id right JOIN place p
+ ON e.place_id=p.place_id right JOIN project pr 
+ON e.proj_id=pr.proj_id order by e.emp_name;
+
+
+5.
+select s.salesman_name,c.cust_name,s.city,c.city from sales s JOIN cust c on s.salesman_id=c.salesman_id where c.city<>s.city;
+mysql> select s.salesman_name,c.cust_name,s.city,c.city from sales s JOIN cust c on s.salesman_id=c.salesman_id where c.city<>s.city;
++---------------+-----------+-----------+---------+
+| salesman_name | cust_name | city      | city    |
++---------------+-----------+-----------+---------+
+| Raju          | Ricky     | Hyderabad | Chennai |
+| Srinath       | Amaran    | Mumbai    | Chennai |
++---------------+-----------+-----------+---------+
+2 rows in set (0.07 sec)
+
+6.
+select s.salesman_name,s.city,s.monthly_target,sum(purchased_amount) as amount_purchase_by_customer 
+from sales s JOIN cust c on s.salesman_id=c.salesman_id group by c.salesman_id having amount_purchase_by_customer>=monthly_target;
+mysql> select s.salesman_name,s.city,s.monthly_target,sum(purchased_amount) as amount_purchase_by_customer
+    -> from sales s JOIN cust c on s.salesman_id=c.salesman_id group by c.salesman_id having amount_purchase_by_customer>=monthly_target;
++---------------+-----------+----------------+-----------------------------+
+| salesman_name | city      | monthly_target | amount_purchase_by_customer |
++---------------+-----------+----------------+-----------------------------+
+| John          | Chennai   |          10000 |                       10000 |
+| Raju          | Hyderabad |          21000 |                       23000 |
+| Srinath       | Mumbai    |           9000 |                        9000 |
+| Vijay         | Chennai   |           4000 |                        5000 |
++---------------+-----------+----------------+-----------------------------+
+4 rows in set (0.00 sec)
+
+7.
+mysql> select cust_name,city,priority_num,purchased_amount from(select cust_name,city,priority_num,
+dense_rank() over(partition by priority_num order by purchased_amount desc) as dr,purchased_amount from cust c) as tab where dr<3;
++-----------+-----------+--------------+------------------+
+| cust_name | city      | priority_num | purchased_amount |
++-----------+-----------+--------------+------------------+
+| James     | Chennai   |            1 |            10000 |
+| Ricky     | Chennai   |            1 |             8000 |
+| Ramu      | Bangalore |            1 |             8000 |
+| Jyothi    | Hyderabad |            2 |             9000 |
+| Akilan    | Hyderabad |            2 |             6000 |
+| Dinesh    | Mumbai    |            2 |             6000 |
++-----------+-----------+--------------+------------------+
+6 rows in set (0.00 sec)
+
+8.
+mysql> mysql> select s.salesman_name,s.city,s.monthly_target,coalesce(sum(purchased_amount),0) as summ from cust c right join sales s
+    -> on s.salesman_id=c.salesman_id group by c.salesman_id having summ <(select avg(monthly_target) from sales) ;
++---------------+-----------+----------------+-------+
+| salesman_name | city      | monthly_target | summ  |
++---------------+-----------+----------------+-------+
+| John          | Chennai   |          10000 | 10000 |
+| Srinath       | Mumbai    |           9000 |  9000 |
+| Vijay         | Chennai   |           4000 |  5000 |
+| Abraham       | Bangalore |          21000 |  8000 |
+| Balaji        | Hyderabad |          15000 |     0 |
++---------------+-----------+----------------+-------+
+5 rows in set (0.00 sec)
+
+9.mysql> select emp_salesman_name,mgr_salesman_name,mgr_Monthly_Target,emp_Amount_purchase_by_Customer
+    -> from
+    -> (select distinct
+    -> mgr.salesman_id as mgr_salesman_id,
+    -> mgr.salesman_name as mgr_salesman_name,
+    -> emp.salesman_name as emp_salesman_name,
+    -> mgr.Monthly_Target as mgr_Monthly_Target,
+    -> sum(c.Purchased_Amount) over (partition by mgr.salesman_id) as mgr_Amount_purchase_by_Customer ,
+    -> sum(c.Purchased_Amount) over (partition by emp.salesman_id) as emp_Amount_purchase_by_Customer
+    -> from
+    -> sales emp
+    -> inner join
+    -> Sales mgr
+    -> on emp.Sales_Manager_id = mgr.salesman_id
+    -> inner join
+    -> cust c
+    -> on c.salesman_id=emp.salesman_id  ) tmp
+    -> where  mgr_Amount_purchase_by_Customer >= mgr_Monthly_Target ;
++-------------------+-------------------+--------------------+---------------------------------+
+| emp_salesman_name | mgr_salesman_name | mgr_Monthly_Target | emp_Amount_purchase_by_Customer |
++-------------------+-------------------+--------------------+---------------------------------+
+| Abraham           | Srinath           |               9000 |                            8000 |
+| Raju              | Srinath           |               9000 |                           23000 |
+| Srinath           | Vijay             |               4000 |                            9000 |
++-------------------+-------------------+--------------------+---------------------------------+
+3 rows in set (0.00 sec)
+
+
+10.
+mysql> select Student_name,
+    -> City_name,
+    -> class
+    -> from
+    -> (select Student_name,City_name,class, row_number() over (partition by Studen_Id order by cl.start_date) as rn
+    -> from
+    -> student  s inner join
+    -> student_details sd on s.Student_Detail_Id=sd.Student_Detail_Id
+    -> inner join city c
+    -> on sd.City_id=c.City_id
+    -> inner join class cl
+    -> on sd.Class_id=cl.Class_id ) tmp
+    -> where rn=1;
++--------------+-----------+-------+
+| Student_name | City_name | class |
++--------------+-----------+-------+
+| Ajay         | Chennai   | 11th  |
+| Ramesh       | Bangalore | 10th  |
+| Shriram      | Bangalore | 10th  |
+| Gopi         | Bangalore | 10th  |
+| Kalai        | Chennai   | 11th  |
+| Vinoth       | Bangalore | 12th  |
++--------------+-----------+-------+
+6 rows in set (0.00 sec)
+
+
+
+11."Fetch All Student_name,City_name,Class_Name,Classroom_num
+
+Show only the information of all the student where stands as of today date"				
+				
+mysql> select s.student_name,c.city_name,cl.class,cl.classroom_num
+    -> from student s join
+    -> student_details sd on s.student_detail_id=sd.student_detail_id join
+    -> city c on c.city_id=sd.city_id join
+    -> class cl on cl.class_id=sd.class_id where cl.start_date<= current_date and cl.end_date >=current_date and sd.start_date <= current_date and sd.end_date >= current_date;
++--------------+-----------+-------+---------------+
+| student_name | city_name | class | classroom_num |
++--------------+-----------+-------+---------------+
+| Ajay         | Chennai   | 12th  |           360 |
+| Ramesh       | Mumbai    | 11th  |           310 |
+| Shriram      | Chennai   | 12th  |           360 |
+| Gopi         | Mumbai    | 11th  |           310 |
+| Kalai        | Chennai   | 11th  |           310 |
+| Vinoth       | Bangalore | 12th  |           360 |
++--------------+-----------+-------+---------------+
+6 rows in set (0.00 sec)
+
+"Fetch All Student_name,City_name
+
+Show only the information of all the student who studied in Chennai or Classroom Number (301,310,320)"		
+		
+12.
+mysql> select distinct s.student_name from student s join
+    ->  student_details sd on s.student_detail_id=sd.student_detail_id join
+    -> city c on c.city_id=sd.city_id join
+    ->  class cl on cl.class_id=sd.class_id where city_name='Chennai' or classroom_num in (301,310,320) ;
++--------------+
+| student_name |
++--------------+
+| Ajay         |
+| Ramesh       |
+| Shriram      |
+| Gopi         |
+| Kalai        |
++--------------+
+5 rows in set (0.00 sec)
+
+
+13.
+mysql> select substr(cust_name,3,(length(cust_name)-4)) as cust_name from customer;
++--------------+
+| cust_name    |
++--------------+
+| mesMart      |
+| ckyAda       |
+| manuj        |
+| othiMahaling |
+| aranJot      |
+| ilanBa       |
+| unKum        |
+| neshkum      |
++--------------+
+8 rows in set (0.00 sec)
+
+14.
+mysql> select case when length(name)=0 then'no second occurance' else name end as name from (select substr((substr(cust_name,1,length(cust_name)-1)),locate('a',cust_name,locate('a',cust_name)+1))AS name from customer) a;
++---------------------+
+| name                |
++---------------------+
+| arti                |
+| am                  |
+| anuja               |
+| alinga              |
+| aranJoth            |
+| anBal               |
+| a                   |
+| no second occurance |
++---------------------+
+8 rows in set (0.00 sec)
+
+15.
+mysql> select cust_name from customer where cust_name like '%a%' and cust_name like '%u%' and cust_name like '%r%';
++-------------+
+| cust_name   |
++-------------+
+| Ramanujam   |
+| ArunKumar   |
+| Dineshkumar |
++-------------+
+3 rows in set (0.00 sec)
